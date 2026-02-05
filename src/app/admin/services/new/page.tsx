@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { createService, getCustomers } from '@/lib/client-actions';
+import { supabase } from '@/lib/supabase';
 import { showToast } from '@/components/toast';
 
 export default function NewServicePage() {
@@ -25,8 +25,18 @@ export default function NewServicePage() {
 
     const fetchCustomers = async () => {
         try {
-            const data = await getCustomers();
-            setCustomers(data);
+            const { data, error } = await supabase
+                .from('customers')
+                .select('*')
+                .order('name', { ascending: true });
+
+            if (error) {
+                console.error('Supabase error:', error);
+                throw error;
+            }
+            
+            console.log('Customers for service:', data);
+            setCustomers(data || []);
         } catch (error) {
             console.error('Error fetching customers:', error);
             showToast('Müşteriler yüklenirken hata oluştu', 'error');
@@ -38,7 +48,18 @@ export default function NewServicePage() {
         setLoading(true);
 
         try {
-            await createService(formData);
+            const { data, error } = await supabase
+                .from('services')
+                .insert([formData])
+                .select()
+                .single();
+
+            if (error) {
+                console.error('Supabase error:', error);
+                throw error;
+            }
+
+            console.log('Service created:', data);
             showToast('Servis başarıyla oluşturuldu', 'success');
             router.push('/admin/services');
         } catch (error) {
