@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { Settings, Database, Shield, Bell, Palette, Globe, Save, Loader2 } from 'lucide-react';
+import { useState } from 'react';
+import { Bell, Palette, Globe, Save, Loader2, Settings, Database, Shield } from 'lucide-react';
 import { showToast } from '@/components/toast';
 
 export default function SettingsPage() {

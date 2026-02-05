@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
-import { Plus, Search, Trash2, Shield, ShieldAlert, User, Database, Loader2 } from 'lucide-react';
+import { Plus, Search, Trash2, Shield, ShieldAlert, User, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import { showToast } from '@/components/toast';
 import { SimpleModal } from '@/components/simple-modal';
