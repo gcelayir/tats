@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
+import { createCustomer } from '@/lib/client-actions';
 import { showToast } from '@/components/toast';
 
 export default function NewCustomerPage() {
@@ -23,18 +23,7 @@ export default function NewCustomerPage() {
         setLoading(true);
 
         try {
-            const { data, error } = await supabase
-                .from('customers')
-                .insert([formData])
-                .select()
-                .single();
-
-            if (error) {
-                console.error('Supabase error:', error);
-                throw error;
-            }
-
-            console.log('Customer created:', data);
+            await createCustomer(formData);
             showToast('Müşteri başarıyla oluşturuldu', 'success');
             router.push('/admin/customers');
         } catch (error) {
