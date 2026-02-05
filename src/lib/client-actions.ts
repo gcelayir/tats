@@ -3,13 +3,16 @@
 import { supabase } from '@/lib/supabase';
 import { showToast } from '@/components/toast';
 
-export async function createUser(email: string, password: string, role: string) {
+export async function createUser(userData: any) {
   try {
     const { data: user, error } = await supabase.auth.signUp({
-      email,
-      password,
+      email: userData.email,
+      password: userData.password,
       options: {
-        data: { role }
+        data: { 
+          full_name: userData.full_name,
+          role: userData.role 
+        }
       }
     });
 
@@ -22,6 +25,24 @@ export async function createUser(email: string, password: string, role: string) 
   } catch (error: any) {
     showToast('Kullanıcı oluşturulurken hata: ' + error.message, 'error');
     return { success: false, error: error.message };
+  }
+}
+
+export async function getCustomers() {
+  try {
+    const { data, error } = await supabase
+      .from('customers')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return data || [];
+  } catch (error: any) {
+    console.error('Müşteriler yüklenirken hata:', error);
+    return [];
   }
 }
 
